@@ -8,7 +8,7 @@ class CacheAside:
         self.ttl = ttl 
         self.cleanup_interval = cleanup_interval 
         self.scheduler = sched.scheduler(time.time, time.sleep)
-        # Start the cleanup scheduler in a separate thread
+
         self.cleanup_thread = Thread(target=self._start_scheduler)
         self.cleanup_thread.daemon = True  
         self.lock=Lock()
@@ -19,10 +19,10 @@ class CacheAside:
 
     def _start_scheduler(self):
         while True:
-            # Schedule the next cleanup event
             self.scheduler.enter(self.cleanup_interval, 1, self._cleanup_expired_cache)
             self.scheduler.run(blocking=True)
-
+        #The while True loop continuously schedules the cleanup event every self.cleanup_interval seconds.
+    
     def get_data(self, key):
         current_time = time.time()
 
